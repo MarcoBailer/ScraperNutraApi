@@ -8,7 +8,7 @@
 - Disponibilizar dados para soluções nutricionais
 
 ## Dados Alimentares 🍉🍔
-**Base:** tabela TACO
+**Base:** tabela TACO, FatSecret, TBCA
 
 ## Funcionalidades
 - Rotas para buscas
