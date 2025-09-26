@@ -1,0 +1,72 @@
+2025-09-26 17:54:56,231 [INFO] - === INICIANDO SCRAPING - MODO: ALIMENTOS GENÉRICOS ===
+2025-09-26 17:54:56,231 [INFO] - Banco de dados 'genericos.db' e tabela 'dados' prontos para uso.
+2025-09-26 17:54:56,231 [INFO] - --- ETAPA 1: Coletando as categorias principais de alimentos genéricos ---
+2025-09-26 17:54:56,385 [INFO] - --- ETAPA 1 CONCLUÍDA: 18 categorias principais encontradas. ---
+2025-09-26 17:54:56,385 [INFO] - PROCESSANDO CATEGORIA 1/18: 'Bebidas'
+2025-09-26 17:54:56,457 [INFO] -   --> Coletando: Água -> Água
+2025-09-26 17:54:57,560 [INFO] -       SALVO: 'Água' (Porção: 100 ml)
+2025-09-26 17:54:57,560 [INFO] -   --> Coletando: Água -> Água da Torneira
+2025-09-26 17:54:58,872 [INFO] -       SALVO: 'Água da Torneira' (Porção: 100 ml)
+2025-09-26 17:54:58,873 [INFO] -   --> Coletando: Água -> Água (Engarrafada)
+2025-09-26 17:54:59,968 [INFO] -       SALVO: 'Água (Engarrafada)' (Porção: 1 ml)
+2025-09-26 17:54:59,968 [INFO] -   --> Coletando: Água -> Cerveja
+2025-09-26 17:55:01,089 [INFO] -       SALVO: 'Cerveja' (Porção: 1 lata ou garrafa (350 ml))
+2025-09-26 17:55:01,089 [INFO] -   --> Coletando: Água -> Cerveja Light
+2025-09-26 17:55:02,193 [INFO] -       SALVO: 'Cerveja Light' (Porção: 1 lata ou garrafa (350 ml))
+2025-09-26 17:55:02,193 [INFO] -   --> Coletando: Água -> Vinho de Mesa
+2025-09-26 17:55:03,300 [INFO] -       SALVO: 'Vinho de Mesa' (Porção: 1 dose de 150 ml)
+2025-09-26 17:55:03,312 [INFO] -   --> Coletando: Água -> Margarita
+2025-09-26 17:55:04,427 [INFO] -       SALVO: 'Margarita' (Porção: 1 coquetel)
+2025-09-26 17:55:04,427 [INFO] -   --> Coletando: Água -> Vodca
+2025-09-26 17:55:05,525 [INFO] -       SALVO: 'Vodca' (Porção: 1 dose (42 g))
+2025-09-26 17:55:05,525 [INFO] -   --> Coletando: Água -> Bebida Energética
+2025-09-26 17:55:06,605 [INFO] -       SALVO: 'Bebida Energética' (Porção: 1 xícara (240 ml))
+2025-09-26 17:55:06,605 [INFO] -   --> Coletando: Água -> Cacau em Pó (Não Adocicado)
+2025-09-26 17:55:07,681 [INFO] -       SALVO: 'Cacau em Pó (Não Adocicado)' (Porção: 100 g)
+2025-09-26 17:55:07,681 [INFO] -   --> Coletando: Água -> Mistura de Cacau e Açúcar (com Leite Desnatado)
+2025-09-26 17:55:08,771 [INFO] -       SALVO: 'Mistura de Cacau e Açúcar (com Leite Desnatado)' (Porção: 1 xícara)
+2025-09-26 17:55:08,771 [INFO] -   --> Coletando: Água -> Leite de Cacau Quente
+2025-09-26 17:55:09,862 [INFO] -       SALVO: 'Leite de Cacau Quente' (Porção: 1 xícara)
+2025-09-26 17:55:09,862 [INFO] -   --> Coletando: Água -> Chocolate Quente (feito com Leite Integral)
+2025-09-26 17:55:10,958 [INFO] -       SALVO: 'Chocolate Quente (feito com Leite Integral)' (Porção: 1 xícara)
+2025-09-26 17:55:10,959 [INFO] -   --> Coletando: Água -> Mistura de Cacau e Açúcar (com Leite Magro)
+2025-09-26 17:55:12,254 [INFO] -       SALVO: 'Mistura de Cacau e Açúcar (com Leite Magro)' (Porção: 1 xícara)
+2025-09-26 17:55:12,254 [INFO] -   --> Coletando: Água -> Café
+2025-09-26 17:55:13,354 [INFO] -       SALVO: 'Café' (Porção: 1 caneco (240 ml))
+2025-09-26 17:55:13,354 [INFO] -   --> Coletando: Água -> Café (Infusão)
+2025-09-26 17:55:14,441 [INFO] -       SALVO: 'Café (Infusão)' (Porção: 1 xícara (240 ml))
+2025-09-26 17:55:14,441 [INFO] -   --> Coletando: Água -> Café Espresso com Leite
+2025-09-26 17:55:15,524 [INFO] -       SALVO: 'Café Espresso com Leite' (Porção: 1 médio)
+2025-09-26 17:55:15,524 [INFO] -   --> Coletando: Água -> Café Expresso
+2025-09-26 17:55:16,622 [INFO] -       SALVO: 'Café Expresso' (Porção: 1 xícara de expresso (60 ml))
+2025-09-26 17:55:16,622 [INFO] -   --> Coletando: Água -> Café Instantâneo (em Pó)
+2025-09-26 17:55:17,715 [INFO] -       SALVO: 'Café Instantâneo (em Pó)' (Porção: 1 caneco (240 ml))
+2025-09-26 17:55:17,715 [INFO] -   --> Coletando: Água -> Café Espresso com Leite
+2025-09-26 17:55:18,795 [INFO] -       SALVO: 'Café Espresso com Leite' (Porção: 1 médio)
+2025-09-26 17:55:18,795 [INFO] -   --> Coletando: Água -> Café Espresso com Leite, Magro (sem Gordura)
+2025-09-26 17:55:19,897 [INFO] -       SALVO: 'Café Espresso com Leite, Magro (sem Gordura)' (Porção: 1 médio)
+2025-09-26 17:55:19,897 [INFO] -   --> Coletando: Água -> Café com Leite de Gordura Reduzida
+2025-09-26 17:55:20,998 [INFO] -       SALVO: 'Café com Leite de Gordura Reduzida' (Porção: 1 médio)
+2025-09-26 17:55:20,998 [INFO] -   --> Coletando: Água -> Café Gelado com Creme de Leite e Açúcar
+2025-09-26 17:55:22,280 [INFO] -       SALVO: 'Café Gelado com Creme de Leite e Açúcar' (Porção: 1 xícara de café (180 ml))
+2025-09-26 17:55:22,280 [INFO] -   --> Coletando: Água -> Café Gelado com Leite
+2025-09-26 17:55:23,347 [INFO] -       SALVO: 'Café Gelado com Leite' (Porção: 1 xícara de café (180 ml))
+2025-09-26 17:55:23,347 [INFO] -   --> Coletando: Água -> Café Gelado com Creme de Leite
+2025-09-26 17:55:24,435 [INFO] -       SALVO: 'Café Gelado com Creme de Leite' (Porção: 1 xícara de café (180 ml))
+2025-09-26 17:55:24,435 [INFO] -   --> Coletando: Água -> Café Gelado com Leite e Açúcar
+2025-09-26 17:55:25,845 [INFO] -       SALVO: 'Café Gelado com Leite e Açúcar' (Porção: 1 xícara de café (180 ml))
+2025-09-26 17:55:25,845 [INFO] -   --> Coletando: Água -> Café Gelado
+2025-09-26 17:55:27,145 [INFO] -       SALVO: 'Café Gelado' (Porção: 1 xícara de café (180 ml))
+2025-09-26 17:55:27,145 [INFO] -   --> Coletando: Água -> Cappuccino
+2025-09-26 17:55:28,232 [INFO] -       SALVO: 'Cappuccino' (Porção: 1 caneco (240 ml))
+2025-09-26 17:55:28,232 [INFO] -   --> Coletando: Água -> Cappuccino Magro (sem Gordura)
+2025-09-26 17:55:29,563 [INFO] -       SALVO: 'Cappuccino Magro (sem Gordura)' (Porção: 1 xícara de café (180 ml))
+2025-09-26 17:55:29,563 [INFO] -   --> Coletando: Água -> Cappuccino com Gordura Reduzida
+2025-09-26 17:55:30,655 [INFO] -       SALVO: 'Cappuccino com Gordura Reduzida' (Porção: 1 xícara de café (180 ml))
+2025-09-26 17:55:30,656 [INFO] -   --> Coletando: Água -> Café (Cappuccino em Pó, Instantâneo, com Açúcar)
+2025-09-26 17:55:31,771 [INFO] -       SALVO: 'Café (Cappuccino em Pó, Instantâneo, com Açúcar)' (Porção: 1 dose de 1 (57 g) envelope)
+2025-09-26 17:55:31,771 [INFO] -   --> Coletando: Água -> Cerveja
+2025-09-26 17:55:32,847 [INFO] -       SALVO: 'Cerveja' (Porção: 1 lata ou garrafa (350 ml))
+2025-09-26 17:55:32,847 [INFO] -   --> Coletando: Água -> Cerveja Light
+2025-09-26 17:55:33,952 [INFO] -       SALVO: 'Cerveja Light' (Porção: 1 lata ou garrafa (350 ml))
+2025-09-26 17:55:33,952 [INFO] -   --> Coletando: Água -> Chá (Infusão)
