@@ -1,0 +1,9 @@
+# Ignora a pasta node_modules na raiz do projeto
+node_modules/
+
+# Ignora o arquivo database.sqlite no diretório src/database/storage/
+src/database/storage/database.sqlite
+
+# Ignora o arquivo alimentos.json e categorias.json dentro da pasta arquivo_base
+arquivo_base/alimentos.json
+arquivo_base/categorias.json
