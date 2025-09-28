@@ -13,14 +13,14 @@ logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s [%(levelname)s] - %(message)s',
     handlers=[
-        logging.FileHandler("extracao_supermercado.log", mode='w'),
+        logging.FileHandler("extracao_fabricantes.log", mode='w'),
         logging.StreamHandler(sys.stdout)
     ]
 )
 
 # --- 2. CONSTANTES E CONFIGURAÇÕES GLOBAIS ---
 BASE_URL = "https://www.fatsecret.com.br"
-DB_NAME = "supermercados_alimentos.db"
+DB_NAME = "fabricantes_alimentos.db"
 
 MAX_RETRIES = 5
 RETRY_DELAY_SECONDS = 30
@@ -137,7 +137,7 @@ def main():
     for letter in letters_to_scrape:
         page = 0
         while True:
-            brands_url = f"{BASE_URL}/Default.aspx?pa=brands&f={letter}&t=3&pg={page}"
+            brands_url = f"{BASE_URL}/Default.aspx?pa=brands&f={letter}&t=1&pg={page}"
             soup = get_soup(brands_url)
             if not soup: break
             manufacturers_on_page = soup.select('td.leftCell h2 > a')
