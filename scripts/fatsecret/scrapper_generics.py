@@ -9,7 +9,7 @@ import sqlite3
 
 # --- 1. CONFIGURAÇÃO DA COLETA ---
 # Opções válidas: 'fabricante', 'fastfood', 'generico'
-TIPO_DE_COLETA = 'generico'  # << Mude aqui para a seção que deseja coletar
+TIPO_DE_COLETA = 'generico'
 
 # --- 2. CONFIGURAÇÃO DO LOGGING ---
 logging.basicConfig(
@@ -201,7 +201,6 @@ def run_generic_scraper(conn):
     products_scraped_count, error_count = 0, 0
     
     logging.info("--- ETAPA 1: Coletando as categorias principais de alimentos genéricos ---")
-    # URL CORRIGIDA para a página principal de grupos genéricos
     main_page_url = f"{BASE_URL}/calorias-nutrição/"
     soup = get_soup(main_page_url)
     if not soup: return 0, 0, 1
@@ -221,14 +220,21 @@ def run_generic_scraper(conn):
         soup_cat = get_soup(category['url'])
         if not soup_cat: continue
 
-        # Na página da categoria, buscamos os sub-grupos
-        sub_group_holders = soup_cat.select('div.secHolder')
-        for holder in sub_group_holders:
-            sub_group_links = holder.select('div.food_links > a')
+        # --- LÓGICA CORRIGIDA ---
+        # Encontra todos os H2 que são títulos de sub-grupos dentro do bloco principal
+        sub_group_headers = soup_cat.select('div.secHolder h2')
+        
+        for h2_tag in sub_group_headers:
+            sub_group_name = h2_tag.get_text(strip=True)
             
-            # O nome do sub-grupo está no H2 acima do div.food_links
-            h2_tag = holder.find('h2')
-            sub_group_name = h2_tag.get_text(strip=True) if h2_tag else "Sub-grupo sem nome"
+            # Encontra o div 'food_links' que é o próximo irmão do H2
+            food_links_div = h2_tag.find_next_sibling('div', class_='food_links')
+            
+            if not food_links_div:
+                logging.warning(f"  --> Nenhum link de alimento encontrado para o sub-grupo '{sub_group_name}'. Pulando.")
+                continue
+
+            sub_group_links = food_links_div.select('a')
             
             for j, sub_link in enumerate(sub_group_links, 1):
                 specific_food_name = sub_link.get_text(strip=True)
@@ -242,7 +248,6 @@ def run_generic_scraper(conn):
                         product_details['Categoria_Principal'] = category['name']
                         product_details['Sub_Categoria'] = sub_group_name
                         product_details['Produto'] = specific_food_name
-                        # A porção já vem no scrape_product_details, não precisa redefinir
 
                         if save_to_db(conn, product_details, ALL_COLUMNS_GENERICO):
                             products_scraped_count += 1
@@ -281,7 +286,8 @@ def main():
         logging.error(f"TIPO_DE_COLETA '{TIPO_DE_COLETA}' inválido. Use 'fabricante', 'fastfood' ou 'generico'.")
         return
 
-    conn.close()
+    if conn:
+        conn.close()
     
     logging.info("==========================================")
     logging.info("========= RESUMO DA EXECUÇÃO =========")
