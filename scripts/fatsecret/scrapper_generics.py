@@ -27,13 +27,11 @@ MAX_RETRIES = 5
 RETRY_DELAY_SECONDS = 30
 CONSECUTIVE_OTHERS_LIMIT = 5
 
-# Colunas para Fabricantes e Fast Food
 ALL_COLUMNS_MARCAS = [
     'Fabricante', 'Produto', 'Porcao', 'Energia_kcal', 'Energia_kj', 'Proteinas', 
     'Carboidratos', 'Acucar', 'Gorduras', 'Gordura_Saturada', 'Gordura_Poliinsaturada', 
     'Gordura_Monoinsaturada', 'Gordura_Trans', 'Colesterol', 'Fibras', 'Sodio', 'Potassio'
 ]
-# Novas colunas para Genéricos, com mais contexto
 ALL_COLUMNS_GENERICO = [
     'Categoria_Principal', 'Sub_Categoria', 'Produto', 'Porcao', 'Energia_kcal', 'Energia_kj', 
     'Proteinas', 'Carboidratos', 'Acucar', 'Gorduras', 'Gordura_Saturada', 'Gordura_Poliinsaturada', 
@@ -50,7 +48,6 @@ COLUMN_MAP = {
 }
 
 def setup_database(db_name, columns):
-    """Cria o arquivo de banco de dados e a tabela com as colunas especificadas."""
     try:
         conn = sqlite3.connect(db_name)
         cursor = conn.cursor()
@@ -65,7 +62,6 @@ def setup_database(db_name, columns):
         return None
 
 def save_to_db(conn, product_data, columns):
-    """Salva um único dicionário de produto no banco de dados SQLite."""
     try:
         cursor = conn.cursor()
         values = [product_data.get(col) for col in columns]
@@ -79,7 +75,6 @@ def save_to_db(conn, product_data, columns):
         return False
 
 def get_soup(url):
-    """Faz uma requisição para a URL com lógica de retentativa."""
     retries = 0
     while retries < MAX_RETRIES:
         try:
@@ -103,7 +98,6 @@ def get_soup(url):
     return None
 
 def scrape_product_details(product_url):
-    """Extrai todos os detalhes nutricionais e mapeia os nomes para as colunas do DB."""
     soup = get_soup(product_url)
     if not soup: return None
     details_raw, details_mapped = {}, {}
@@ -131,6 +125,7 @@ def scrape_product_details(product_url):
 
 def run_brands_scraper(conn, parametro_t, tipo_str):
     """Lógica de scraping para Fabricantes e Fast Food."""
+    # (Esta função permanece inalterada)
     letters_to_scrape = list(string.ascii_lowercase) + ['*']
     unique_manufacturers = set()
     logging.info(f"--- ETAPA 1: Coletando a lista de todos os {tipo_str} ---")
@@ -146,10 +141,8 @@ def run_brands_scraper(conn, parametro_t, tipo_str):
             time.sleep(2)
             page += 1
     logging.info(f"--- ETAPA 1 CONCLUÍDA: {len(unique_manufacturers)} {tipo_str} únicos encontrados. ---")
-
     logging.info("--- ETAPA 2: Iniciando a coleta e salvamento de produtos no banco de dados. ---")
     products_scraped_count, error_count = 0, 0
-    
     for i, manufacturer in enumerate(sorted(list(unique_manufacturers)), 1):
         logging.info(f"PROCESSANDO {i}/{len(unique_manufacturers)}: '{manufacturer}'")
         page, consecutive_other_brands_count = 0, 0
@@ -184,110 +177,112 @@ def run_brands_scraper(conn, parametro_t, tipo_str):
                 except Exception as e:
                     error_count += 1
                     logging.error(f"    ERRO INESPERADO ao processar uma linha. Erro: {e}")
-            if consecutive_other_brands_count >= CONSECUTIVE_OTHERS_LIMIT:
-                logging.info(f"  OTIMIZAÇÃO: Parando a busca para '{manufacturer}'.")
-                break
-            if not found_target_brand_on_page and page > 0:
-                 logging.info(f"  OTIMIZAÇÃO: Nenhum produto de '{manufacturer}' encontrado na página {page+1}. Parando a busca.")
-                 break
+            if consecutive_other_brands_count >= CONSECUTIVE_OTHERS_LIMIT: break
+            if not found_target_brand_on_page and page > 0: break
             time.sleep(2)
             page += 1
-    
-    logging.info("--- ETAPA 2 CONCLUÍDA: Coleta de dados finalizada. ---")
     return len(unique_manufacturers), products_scraped_count, error_count
 
 def run_generic_scraper(conn):
-    """Lógica de scraping para Alimentos Genéricos."""
+    """Lógica de scraping aprimorada para Alimentos Genéricos."""
     products_scraped_count, error_count = 0, 0
     
-    logging.info("--- ETAPA 1: Coletando as categorias principais de alimentos genéricos ---")
+    logging.info("--- ETAPA 1: Coletando as categorias principais ---")
     main_page_url = f"{BASE_URL}/calorias-nutrição/"
     soup = get_soup(main_page_url)
     if not soup: return 0, 0, 1
 
-    main_categories = []
-    category_links = soup.select('table.generic.common a.prominent')
-    for link in category_links:
-        main_categories.append({
-            "name": link.get_text(strip=True),
-            "url": BASE_URL + link['href']
-        })
+    main_categories = [{"name": link.get_text(strip=True), "url": BASE_URL + link['href']} for link in soup.select('table.generic.common a.prominent')]
     logging.info(f"--- ETAPA 1 CONCLUÍDA: {len(main_categories)} categorias principais encontradas. ---")
 
-    # ETAPA 2: Navegar em cada categoria e sub-categoria
     for i, category in enumerate(main_categories, 1):
         logging.info(f"PROCESSANDO CATEGORIA {i}/{len(main_categories)}: '{category['name']}'")
         soup_cat = get_soup(category['url'])
         if not soup_cat: continue
 
-        # --- LÓGICA CORRIGIDA ---
-        # Encontra todos os H2 que são títulos de sub-grupos dentro do bloco principal
         sub_group_headers = soup_cat.select('div.secHolder h2')
-        
         for h2_tag in sub_group_headers:
             sub_group_name = h2_tag.get_text(strip=True)
+            logging.info(f"  --> Iniciando busca por sub-grupo: '{sub_group_name}'")
             
-            # Encontra o div 'food_links' que é o próximo irmão do H2
-            food_links_div = h2_tag.find_next_sibling('div', class_='food_links')
-            
-            if not food_links_div:
-                logging.warning(f"  --> Nenhum link de alimento encontrado para o sub-grupo '{sub_group_name}'. Pulando.")
-                continue
-
-            sub_group_links = food_links_div.select('a')
-            
-            for j, sub_link in enumerate(sub_group_links, 1):
-                specific_food_name = sub_link.get_text(strip=True)
-                product_url = BASE_URL + sub_link['href']
-
-                logging.info(f"  --> Coletando: {sub_group_name} -> {specific_food_name}")
+            page = 0
+            while True:
+                query = urllib.parse.quote_plus(sub_group_name)
+                search_url = f"{BASE_URL}/calorias-nutrição/search?q={query}&pg={page}"
+                logging.info(f"      Buscando na página {page + 1} de resultados...")
                 
-                try:
-                    product_details = scrape_product_details(product_url)
-                    if product_details:
-                        product_details['Categoria_Principal'] = category['name']
-                        product_details['Sub_Categoria'] = sub_group_name
-                        product_details['Produto'] = specific_food_name
+                soup_search = get_soup(search_url)
+                if not soup_search: break
 
-                        if save_to_db(conn, product_details, ALL_COLUMNS_GENERICO):
-                            products_scraped_count += 1
-                            logging.info(f"      SALVO: '{specific_food_name}' (Porção: {product_details.get('Porcao')})")
-                        else: error_count += 1
-                except Exception as e:
-                    error_count += 1
-                    logging.error(f"      ERRO INESPERADO ao processar '{specific_food_name}'. Erro: {e}")
+                product_rows = soup_search.select('table.searchResult td.borderBottom')
+                if not product_rows:
+                    logging.info("      Nenhum resultado encontrado nesta página. Finalizando busca para este sub-grupo.")
+                    break
+
+                for row in product_rows:
+                    try:
+                        brand_tag = row.select_one('a.brand')
+                        # Se existe uma marca, ignora este item
+                        if brand_tag:
+                            logging.info(f"          IGNORANDO (com marca): '{row.select_one('a.prominent').get_text(strip=True)}'")
+                            continue
+                        
+                        # Se não tem marca, é um alimento genérico que queremos
+                        link = row.select_one('a.prominent')
+                        if not link: continue
+
+                        product_name = link.get_text(strip=True)
+                        product_url = BASE_URL + link['href']
+                        
+                        product_details = scrape_product_details(product_url)
+                        if product_details:
+                            product_details['Categoria_Principal'] = category['name']
+                            product_details['Sub_Categoria'] = sub_group_name
+                            product_details['Produto'] = product_name
+
+                            if save_to_db(conn, product_details, ALL_COLUMNS_GENERICO):
+                                products_scraped_count += 1
+                                logging.info(f"          SALVO: '{product_name}' (Porção: {product_details.get('Porcao')})")
+                            else: error_count += 1
+                    except Exception as e:
+                        error_count += 1
+                        logging.error(f"          ERRO INESPERADO ao processar item. Erro: {e}")
+                
+                # Verifica se há um link para a "próxima" página para continuar a paginação
+                next_link = soup_search.select_one('span.next > a')
+                if not next_link:
+                    break # Sai do loop while se não houver mais páginas
+                
+                time.sleep(2)
+                page += 1
     
     return len(main_categories), products_scraped_count, error_count
 
 def main():
     """Função principal que seleciona qual scraper rodar."""
+    # (Esta função permanece inalterada)
     if TIPO_DE_COLETA in ['fabricante', 'fastfood']:
         if TIPO_DE_COLETA == 'fastfood':
             parametro_t, db_name, tipo_str = '2', "fastfood.db", "Restaurantes/Fast Food"
         else:
             parametro_t, db_name, tipo_str = '1', "alimentos.db", "Fabricantes de Alimentos"
-        
         logging.info(f"=== INICIANDO SCRAPING - MODO: {tipo_str.upper()} ===")
         conn = setup_database(db_name, ALL_COLUMNS_MARCAS)
         if not conn: return
-        
         entities_count, products_count, error_count = run_brands_scraper(conn, parametro_t, tipo_str)
         entity_label = "Entidades"
-
     elif TIPO_DE_COLETA == 'generico':
         db_name, tipo_str = "genericos.db", "Alimentos Genéricos"
         logging.info(f"=== INICIANDO SCRAPING - MODO: {tipo_str.upper()} ===")
         conn = setup_database(db_name, ALL_COLUMNS_GENERICO)
         if not conn: return
-        
         entities_count, products_count, error_count = run_generic_scraper(conn)
         entity_label = "Categorias Principais"
     else:
-        logging.error(f"TIPO_DE_COLETA '{TIPO_DE_COLETA}' inválido. Use 'fabricante', 'fastfood' ou 'generico'.")
+        logging.error(f"TIPO_DE_COLETA '{TIPO_DE_COLETA}' inválido.")
         return
 
-    if conn:
-        conn.close()
+    if conn: conn.close()
     
     logging.info("==========================================")
     logging.info("========= RESUMO DA EXECUÇÃO =========")
