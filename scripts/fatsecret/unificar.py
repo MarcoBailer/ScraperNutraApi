@@ -3,32 +3,30 @@ import pandas as pd
 import os
 
 # --- CONFIGURAÇÃO CENTRALIZADA ---
-
+# C:\Users\maico\source\repos\FoodDataApi\scripts\fatsecret\db\fabricantes_alimentos.db
 FONTES_DE_DADOS = [
     {
-        "arquivo_origem": "fabricantes_alimentos.db",
+        "arquivo_origem": "./db/fabricantes_alimentos.db",
         "tabela_origem": "alimentos",
         "tabela_destino": "fabricantes"
     },
     {
-        "arquivo_origem": "restaurante_fastfood_alimentos.db",
+        "arquivo_origem": "./db/restaurante_fastfood_alimentos.db",
         "tabela_origem": "alimentos",
         "tabela_destino": "fast_food"
     },
     {
-        "arquivo_origem": "tbca_alimentos.db",
+        "arquivo_origem": "./db/tbca_alimentos.db",
         "tabela_origem": "alimentos",
         "tabela_destino": "tbca"
+    },
+    {
+        "arquivo_origem": "./db/genericos.db",
+        "tabela_origem": "dados",
+        "tabela_destino": "genericos"
     }
-    # Para adicionar o banco de dados de genéricos no futuro, adicionar aqui:
-    # {
-    #     "arquivo_origem": "genericos.db",
-    #     "tabela_origem": "dados",
-    #     "tabela_destino": "genericos"
-    # }
 ]
 
-# Nome do arquivo de banco de dados unificado final
 DB_UNIFICADO = 'alimentos.db'
 
 
